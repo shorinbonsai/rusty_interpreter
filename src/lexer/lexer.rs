@@ -62,17 +62,54 @@ impl Lexer {
 
 #[test]
 fn test_next_token() {
-    let input = "=+(){},;";
+    let input = r#"let five = 5;
+    let ten = 10;
+
+    let add = fn(x, y) {
+        x + y;
+    };
+
+    let result = add(five, ten);"#;
+
 
     let expected = vec![
-        Token::Assign,
-        Token::Plus,
-        Token::Lparen,
-        Token::Rparen,
-        Token::Lbrace,
-        Token::Rbrace,
-        Token::Comma,
-        Token::Semicolon,
+        Token::Let,
+		Token::Ident(String::from("three")),
+		Token::Assign,
+		Token::Int(3),
+		Token::Semicolon,
+		Token::Let,
+		Token::Ident(String::from("seven")),
+		Token::Assign,
+		Token::Int(7),
+		Token::Semicolon,
+		Token::Let,
+		Token::Ident(String::from("add")),
+		Token::Assign,
+		Token::Function,
+		Token::Lparen,
+		Token::Ident(String::from("x")),
+		Token::Comma,
+		Token::Ident(String::from("y")),
+		Token::Rparen,
+		Token::Assign,
+		Token::Lbrace,
+		Token::Ident(String::from("x")),
+		Token::Plus,
+		Token::Ident(String::from("y")),
+		Token::Semicolon,
+		Token::Rbrace,
+		Token::Semicolon,
+		Token::Let,
+		Token::Ident(String::from("result")),
+		Token::Assign,
+		Token::Ident(String::from("add")),
+		Token::Lparen,
+		Token::Ident(String::from("three")),
+		Token::Comma,
+		Token::Ident(String::from("seven")),
+		Token::Rparen,
+		Token::Semicolon,
     ];
     let mut l = Lexer::new(input.to_owned());
     for x in expected {

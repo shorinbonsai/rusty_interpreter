@@ -7,7 +7,8 @@ pub enum Token {
 
     Ident(String),
     Int(i32),
-    //String(String),
+    String(String),
+    Bool(bool),
 
     Assign,
     Plus,
@@ -30,5 +31,21 @@ pub enum Token {
 
     Function,
     Let,
+    If,
+    Else,
+    Return,
 
 }
+
+impl Token {
+    pub fn lookup_ident(ident: String) -> Token {
+	match ident.as_str() {
+	    "fn" => Token::Function,
+	    "let" => Token::Let,
+	    "true" => Token::Bool(true),
+	    "false" => Token::Bool(false),
+	    "if" => Token::If,
+	    "else" => Token::Else,
+	    "return" => Token::Return,
+	    _ => Token::Ident(ident.to_string())
+}}}

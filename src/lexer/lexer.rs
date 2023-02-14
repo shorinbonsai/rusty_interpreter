@@ -39,8 +39,21 @@ impl Lexer {
 
     }
 
+    fn read_identifier(&mut self) -> String {
+	let position = self.position;
+	while Lexer::is_letter(self.ch){
+	    self.read_char();
+	}
+	return self.input[position..self.position].to_string();
+    }
+
+    fn is_letter(character: char) -> bool {
+	return character.is_ascii_alphanumeric() || character == '_';
+    }
+
     fn next_token(&mut self) -> Token {
         let tok: Token;
+	self.skip_whitespace();
         
         match self.ch {
             '+' => tok = Token::Plus,
@@ -52,10 +65,24 @@ impl Lexer {
             ',' => tok = Token::Comma,
             ';' => tok = Token::Semicolon,
             '\0' => tok = Token::EOF,
-            _ => tok = Token::Illegal,
+            _ => {
+		if Lexer::is_letter(self.ch) {
+		    let identifier = self.read_identifier();
+		    let tok = Token::lookup_ident(identifier); 
+		    return tok;
+		} else {
+		    tok = Token::Illegal;
+		}
+	    } 
         }
         self.read_char();
         return tok;
+    }
+
+    fn skip_whitespace(&mut self) {
+	while self.ch.is_whitespace() {
+	    self.read_char();
+	}
     }
 }
 
@@ -110,6 +137,7 @@ fn test_next_token() {
 		Token::Ident(String::from("seven")),
 		Token::Rparen,
 		Token::Semicolon,
+		Token::EOF,
     ];
     let mut l = Lexer::new(input.to_owned());
     for x in expected {

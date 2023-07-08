@@ -1,5 +1,3 @@
-
-
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub enum Token {
     Illegal,
@@ -12,15 +10,15 @@ pub enum Token {
 
     Assign,
     Plus,
-    //Minus,
-    //Bang,
-    //Asterisk,
-    //Slash,
+    Minus,
+    Bang,
+    Asterisk,
+    Slash,
 
-    //Lt,
-    //Gt,
-    //Eq,
-    //Not_eq,
+    Lt,
+    Gt,
+    Eq,
+    Not_eq,
 
     Comma,
     Semicolon,
@@ -34,18 +32,20 @@ pub enum Token {
     If,
     Else,
     Return,
-
 }
 
 impl Token {
     pub fn lookup_ident(ident: String) -> Token {
-	match ident.as_str() {
-	    "fn" => Token::Function,
-	    "let" => Token::Let,
-	    "true" => Token::Bool(true),
-	    "false" => Token::Bool(false),
-	    "if" => Token::If,
-	    "else" => Token::Else,
-	    "return" => Token::Return,
-	    _ => Token::Ident(ident.to_string())
-}}}
+        match ident.as_str() {
+            "fn" => return Token::Function,
+            "let" => return Token::Let,
+            "true" => return Token::Bool(true),
+            "false" => return Token::Bool(false),
+            "if" => return Token::If,
+            "else" => return Token::Else,
+            "return" => return Token::Return,
+            _ => return Token::Ident(ident.to_string()),
+        }
+    }
+}
+ 

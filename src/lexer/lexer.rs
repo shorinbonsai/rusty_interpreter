@@ -65,48 +65,43 @@ impl Lexer {
         return ch.is_ascii_digit();
     }
 
-    fn read_number(&mut self) -> i32 {
+    fn read_number(&mut self) -> String {
         let position = self.position;
         while self.ch.is_ascii_digit() {
             self.read_char();
         }
-        return self.input[position..self.position].parse().unwrap();
+        return self.input[position..self.position].to_string();
+
+        // return self.input[position..self.position].parse().unwrap();
 
     }
 
-    // fn read_number(&mut self) -> i64 {
-    //     let mut literal = AsciiString::new();
-    //     while self.ch.is_ascii_digit() {
-    //         literal.push(self.ch);
-    //         self.read_char();
-    //     }
-    //     literal.to_string().parse().expect("failed to parse number")
-    // }
-
-    
-    // func (l *Lexer) readNumber() string {
-    //     position := l.position
-    //     for isDigit(l.ch) {
-    //         l.readChar()
-    //     }
-    //     return l.input[position:l.position]
-    // }
-
-    // func isDigit(ch byte) bool {
-    //     return '0' <= ch && ch <= '9'
-    // }
-
-    fn next_token(&mut self) -> Token {
+    pub fn next_token(&mut self) -> Token {
         let tok: Token;
         self.skip_whitespace();
 
         match self.ch {
             '+' => tok = Token::Plus,
-            '=' => tok = Token::Assign,
+            '=' => tok =  {
+                if self.peek_char() == '=' {
+                    self.read_char();
+                    Token::Eq
+                } else {
+                    Token::Assign
+                }
+            },
             '(' => tok = Token::Lparen,
             ')' => tok = Token::Rparen,
             '{' => tok = Token::Lbrace,
             '}' => tok = Token::Rbrace,
+            '!' => tok = {
+                if self.peek_char() == '=' {
+                    self.read_char();
+                    Token::Not_eq
+                } else {
+                    Token::Bang
+                }
+            },
             ',' => tok = Token::Comma,
             ';' => tok = Token::Semicolon,
             '-' => tok = Token::Minus,
@@ -120,8 +115,9 @@ impl Lexer {
                     let identifier = self.read_identifier();
                     let tok = Token::lookup_ident(identifier);
                     return tok;
-                } else if self.ch.is_ascii_digit() {
-                    return Token::Int(self.read_number());
+                } else if Self::is_digit(self.ch) {
+                    let tok = Token::Int(self.read_number());
+                    return tok;
                 } else {
                     tok = Token::Illegal;
                 }
@@ -153,12 +149,12 @@ fn test_next_token() {
         Token::Let,
         Token::Ident(String::from("five")),
         Token::Assign,
-        Token::Int(5),
+        Token::Int(String::from("5")),
         Token::Semicolon,
         Token::Let,
         Token::Ident(String::from("ten")),
         Token::Assign,
-        Token::Int(10),
+        Token::Int(String::from("10")),
         Token::Semicolon,
         Token::Let,
         Token::Ident(String::from("add")),

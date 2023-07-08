@@ -4,7 +4,7 @@ pub enum Token {
     EOF,
 
     Ident(String),
-    Int(i32),
+    Int(String),
     String(String),
     Bool(bool),
 
@@ -19,6 +19,8 @@ pub enum Token {
     Gt,
     Eq,
     Not_eq,
+    Lt_eq,
+    Gt_eq,
 
     Comma,
     Semicolon,
